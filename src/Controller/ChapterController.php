@@ -41,7 +41,7 @@ class ChapterController extends AbstractController
     /**
      * @Route("/chapters/{slug}-{id}", name="chapter.show", requirements={"slug": "[a-z0-9\-]*"})
      */
-    public function show(Chapter $chapter, string $slug, Request $request): Response
+    public function show(Chapter $chapter, string $slug, Request $request,  ObjectManager $em): Response
     {
         if ($chapter->getSlug() !== $slug) {
             return $this->redirectToRoute('chapter.show', [
@@ -50,23 +50,24 @@ class ChapterController extends AbstractController
             ], 301);
         }
 
-        //$comment = new Comment();
-        //$form = $this->createForm(CommentType::class, $comment);
+        $comment = new Comment();
+        $form = $this->createForm(CommentType::class, $comment);
 
-        //$form->handleRequest($request);
+        $form->handleRequest($request);
 
-        //if ($form->isSubmitted() && $form->isValid()) {
-            //$em->persist($comment);
-            //$em->flush();
+        if ($form->isSubmitted() && $form->isValid()) {
+            $comment->setChapter($chapter);
+            $em->persist($comment);
+            $em->flush();
 
-            //$this->addFlash('notice', 'Votre commentaire a bien été ajouté.');
+            $this->addFlash('notice', 'Votre commentaire a bien été ajouté.');
 
-            //return $this->redirectToRoute('chapter.show', ['id' => $chapter->getId()]);
-        //}
+            return $this->redirectToRoute('chapter.show', ['id' => $chapter->getId()]);
+        }
 
         return $this->render('chapter/show.html.twig', [
             'chapter' => $chapter, 
-            //'form' => $form->createView()
+            'form' => $form->createView(),
         ]);
     }
 }

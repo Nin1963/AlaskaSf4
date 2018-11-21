@@ -32,11 +32,11 @@
         <br>
         <p style="text-align: center"><strong>Ajouter un commentaire si vous le voulez! :)</strong></p>
 
-        {#{{ form_start(form) }}
+        {{ form_start(form) }}
         {{ form_row(form.author) }}
         {{ form_row(form.content) }}
         <input type="submit">
-        {{ form_end(form) }}#}
+        {{ form_end(form) }}
     </div> 
 
 {% endblock %}

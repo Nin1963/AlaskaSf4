@@ -34,21 +34,21 @@ class CommentController extends AbstractController
     /**
      * @Route("chapter/{id}", name="comment.new")
      */
-    public function new(Request $request)
-    {
-        $comment = new Comment();
-        $form = $this->createForm(CommentType::class, $comment);
-        $form->handleRequest($request);
+    //public function new(Request $request)
+    //{
+        //$comment = new Comment();
+        //$form = $this->createForm(CommentType::class, $comment);
+        //$form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->em->persist($comment);
-            $this->em->flush();
-            return $this->redirectToRoute('chapter.show');
-        }
+        //if ($form->isSubmitted() && $form->isValid()) {
+            //$this->em->persist($comment);
+            //$this->em->flush();
+            //return $this->redirectToRoute('chapter.show');
+        //}
 
-        return $this->render('chapter/show.html.twig', [
-            'comment' => $comment,
-            'form' => $form->createView()
-        ]);
-    }
+        //return $this->render('chapter/show.html.twig', [
+            //'comment' => $comment,
+            //'form' => $form->createView()
+        //]);
+    //}
 }
