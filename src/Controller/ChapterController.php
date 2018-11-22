@@ -41,7 +41,7 @@ class ChapterController extends AbstractController
     /**
      * @Route("/chapters/{slug}-{id}", name="chapter.show", requirements={"slug": "[a-z0-9\-]*"})
      */
-    public function show(Chapter $chapter, string $slug, Request $request,  ObjectManager $em): Response
+    public function show(Chapter $chapter, string $slug, Request $request,  ObjectManager $em, CommentRepository $commentRepository): Response
     {
         if ($chapter->getSlug() !== $slug) {
             return $this->redirectToRoute('chapter.show', [
@@ -62,7 +62,21 @@ class ChapterController extends AbstractController
 
             $this->addFlash('notice', 'Votre commentaire a bien été ajouté.');
 
-            return $this->redirectToRoute('chapter.show', ['id' => $chapter->getId()]);
+            return $this->redirectToRoute('chapter.show', ['slug' => $chapter->getSlug(), 'id' => $chapter->getId()]);
+        }
+
+        // Récupération de la valeur du paramètre signal passé dans l'URL
+        $signal = $request->query->get('signal');
+
+        // Mise à jour du paramètre signaled
+        if ($signal == true) {
+            $idComment = $request->query->get('idComment');
+
+            $signaledComment = $commentRepository->find($idComment);
+            $signaledComment->setSignaled(true);
+            $em->flush();
+
+            $this->addFlash('success', 'Commentaire signalé');
         }
 
         return $this->render('chapter/show.html.twig', [
