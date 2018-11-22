@@ -25,7 +25,7 @@
             {{ comment.author}} (<small>{{ comment.createdAt | date('d/m/y à H:i') }}</small>)
             <p>{{ comment.content | raw }}</p>
             {% if comment.signaled != true %}
-            <p><a href="{{ path ('chapter_show', {'id': comment.id, signal: true}) }}">(signaler)</a></p>
+            <p><a href="{{ path('chapter.show', {'slug': chapter.slug, 'id': chapter.id, 'idComment': comment.id, 'signal': true}) }}">(signaler)</a></p>
             {% endif %}
         {% endfor %}
         <br>
