@@ -20,6 +20,10 @@ class ChapterController extends AbstractController
      */
     private $repository;
 
+    private $repositoryComment;
+
+    private $em;
+
     public function __construct(ChapterRepository $repository, CommentRepository $repositoryComment, ObjectManager $em)
     {
         $this->repository = $repository;
@@ -41,7 +45,7 @@ class ChapterController extends AbstractController
     /**
      * @Route("/chapters/{slug}-{id}", name="chapter.show", requirements={"slug": "[a-z0-9\-]*"})
      */
-    public function show(Chapter $chapter, string $slug, Request $request,  ObjectManager $em, CommentRepository $commentRepository): Response
+    public function show(Chapter $chapter, string $slug, Request $request): Response
     {
         if ($chapter->getSlug() !== $slug) {
             return $this->redirectToRoute('chapter.show', [
@@ -57,8 +61,8 @@ class ChapterController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $comment->setChapter($chapter);
-            $em->persist($comment);
-            $em->flush();
+            $this->em->persist($comment);
+            $this->em->flush();
 
             $this->addFlash('notice', 'Votre commentaire a bien été ajouté.');
 
@@ -72,9 +76,9 @@ class ChapterController extends AbstractController
         if ($signal == true) {
             $idComment = $request->query->get('idComment');
 
-            $signaledComment = $commentRepository->find($idComment);
+            $signaledComment = $this->repositoryComment->find($idComment);
             $signaledComment->setSignaled(true);
-            $em->flush();
+            $this->em->flush();
 
             $this->addFlash('success', 'Commentaire signalé');
         }
