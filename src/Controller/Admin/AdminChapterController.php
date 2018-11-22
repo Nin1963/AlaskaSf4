@@ -18,6 +18,8 @@ class AdminChapterController extends AbstractController
      */
     private $repository;
 
+    private $em;
+
     public function __construct(ChapterRepository $repository, ObjectManager $em)
     {
         $this->repository = $repository;
