@@ -19,6 +19,8 @@ class ChapterController extends AbstractController
      * @var ChapterRepository
      */
     private $repository;
+    private $repositoryComment;
+    private $em;
 
     public function __construct(ChapterRepository $repository, CommentRepository $repositoryComment, ObjectManager $em)
     {
@@ -41,7 +43,7 @@ class ChapterController extends AbstractController
     /**
      * @Route("/chapters/{slug}-{id}", name="chapter.show", requirements={"slug": "[a-z0-9\-]*"})
      */
-    public function show(Chapter $chapter, string $slug, Request $request,  ObjectManager $em): Response
+    public function show(Chapter $chapter, string $slug, Request $request): Response
     {
         if ($chapter->getSlug() !== $slug) {
             return $this->redirectToRoute('chapter.show', [
@@ -57,12 +59,28 @@ class ChapterController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $comment->setChapter($chapter);
-            $em->persist($comment);
-            $em->flush();
+            $this->em->persist($comment);
+            $$this->em->flush();
 
-            $this->addFlash('notice', 'Votre commentaire a bien été ajouté.');
+            $this->addFlash('success', 'Votre commentaire a bien été ajouté.');
 
-            return $this->redirectToRoute('chapter.show', ['id' => $chapter->getId()]);
+            return $this->redirectToRoute('chapter.show', ['slug' => $chapter->getSlug(), 'id' => $chapter->getId()]);
+        }
+
+        $signal = $request->query->get('signal');
+
+        // Mise à jour du paramètre signaled
+        if ($signal == true) {
+
+            $idComment = $request->query->get('idComment');
+
+            /*  @var \App\Entity\Comment */
+            $signaledComment = $this->repositoryComment->find($idComment);
+
+            $signaledComment->setSignaled(true);
+            $this->em->flush();
+
+            $this->addFlash('success', 'Commentaire signalé');
         }
 
         return $this->render('chapter/show.html.twig', [

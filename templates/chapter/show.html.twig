@@ -11,21 +11,22 @@
             <p>{{chapter.content | raw }}
         </div>
     </div>
-    {#{% for message in app.flashes('success
+    {% for message in app.flashes('success
     ') %}
     <div class="container alert alert-success" role="alert">{{ message }}
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
-    {% endfor %}#}
+    {% endfor %}
     <div class="jumbotron">
         <strong><h2>Commentaires ({{ chapter.comments | length }})</h2></strong>
         {% for comment in chapter.comments %}
             {{ comment.author}} (<small>{{ comment.createdAt | date('d/m/y à H:i') }}</small>)
             <p>{{ comment.content | raw }}</p>
             {% if comment.signaled != true %}
-            <p><a href="{{ path ('chapter_show', {'id': comment.id, signal: true}) }}">(signaler)</a></p>
+            <p><a href="{{ path ('chapter.show', { 
+                 'slug': chapter.slug,'id': chapter.id, 'idComment': comment.id, 'signal': true}) }}">(signaler)</a></p>
             {% endif %}
         {% endfor %}
         <br>
