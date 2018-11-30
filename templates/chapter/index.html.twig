@@ -3,7 +3,7 @@
 {% block body %}
 <div class="jumbotron jumbotron-fluid">
     <h1 class="chapitre">Chapitres</h1>
-    {#{% for chapter in chapters %}
+    {{% for chapter in chapters %}
         <strong><h2 class="title">{{ chapter.title }}</h2></strong>
         <div class="date">
             <em>Ecrit le {{ chapter.createdAt | date('d/m/Y') }} à {{ chapter.createdAt | date('H:i') }}</em>
@@ -15,6 +15,6 @@
             <br>
             <a href="{{ path('chapter_show', {'id': chapter.id}) }}">Lire la suite....</a></p>
         </div>
-    {% endfor %}#}
+    {% endfor %}
 </div>
 {% endblock %}

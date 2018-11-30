@@ -25,10 +25,14 @@ class ChapterRepository extends ServiceEntityRepository
     public function findLatest(): array
     {
         return $this->createQueryBuilder('c')
-            ->setMaxResults(4)
+            //->setMaxResults(4)
             ->getQuery()
             ->getResult();
     }
+
+
+   
+
 
     // /**
     //  * @return Chapter[] Returns an array of Chapter objects

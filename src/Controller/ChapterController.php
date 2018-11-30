@@ -17,6 +17,7 @@ class ChapterController extends AbstractController
 {
     /**
      * @var ChapterRepository
+     * @var CommentRepository
      */
     private $repository;
     private $repositoryComment;
@@ -81,11 +82,13 @@ class ChapterController extends AbstractController
             $this->em->flush();
 
             $this->addFlash('success', 'Commentaire signalé');
-        }
+        } 
 
         return $this->render('chapter/show.html.twig', [
             'chapter' => $chapter, 
             'form' => $form->createView(),
         ]);
     }
+
+    
 }

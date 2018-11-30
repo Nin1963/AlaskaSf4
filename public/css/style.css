@@ -97,6 +97,11 @@ footer.row
 	margin: 20px 0 40px 0;
 }
 
+.fa-twitter, .fa-facebook, .fa-google-plus, .fa-flickr, .fa-spotify 
+{
+	color: rgb(33, 37, 41)
+}
+
 .jumbotron 
 {
 	padding: 30px;

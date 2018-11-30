@@ -3,8 +3,10 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Chapter;
+use App\Entity\Comment;
 use App\Form\ChapterType;
 use App\Repository\ChapterRepository;
+use App\Repository\CommentRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,11 +19,13 @@ class AdminChapterController extends AbstractController
      * @var ChapterRepository
      */
     private $repository;
+    private $repositoryComment;
     private $em;
 
-    public function __construct(ChapterRepository $repository, ObjectManager $em)
+    public function __construct(ChapterRepository $repository,CommentRepository $repositoryComment, ObjectManager $em)
     {
         $this->repository = $repository;
+        $this->repositoryComment = $repositoryComment;
         $this->em = $em;
     }
     /**
@@ -88,8 +92,49 @@ class AdminChapterController extends AbstractController
             $this->em->flush();
             $this->addFlash('success', 'Le chapitre a bien été supprimé!');
         }
-
+        
         return $this->redirectToRoute('admin.chapter.index');
     }
-        
+
+    /**
+     *@Route("/admin/signaled/{id}", name="admin.comment.delete", methods="DELETE")
+     */
+    public function removeComment(Comment $comment, Request $request)
+    {
+        if ($this->isCsrfTokenValid('delete' . $comment->getId(), $request->get('_token'))) {
+            $this->em->remove($comment);
+            $this->em->flush();
+            $this->addFlash('success', 'Le commentaire a bien été supprimé');
+        }
+       
+        $comments = $this->repositoryComment->findSignaledQuery();
+
+        return $this->render('admin/comment/signaled.html.twig', [
+            'comments' => $comments
+        ]);
+    }
+
+    /**
+     * @Route("/admin/signaled/{id}", name="admin.comment.approve", methods="POST")
+     */
+    public function approveComment(Comment $comment, Request $request)
+    {
+        if ($this->isCsrfTokenValid('approve' . $comment->getId(), $request->get('_token'))) {
+            $signal = $request->query->get('signal');
+            if ($signal == true) {
+                $idComment = $request->query->get('idComment');
+                /*  @var \App\Entity\Comment */
+                $signaledComment = $this->repositoryComment->find($idComment);
+                $signaledComment->setSignaled(false);
+                $this->em->persist($signaledComment);
+                $this->em->flush();
+            }
+            $this->addFlash('success', 'Le commentaire a bien été approuvé');
+        }
+        $comments = $this->repositoryComment->findSignaledQuery();
+
+        return $this->render('admin/comment/signaled.html.twig', [
+            'comments' => $comments
+        ]);
+    }
 }

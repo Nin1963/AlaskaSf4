@@ -21,11 +21,11 @@
         </div>
     {% endfor %}
     <div class="jumbotron">
-        <strong><h2>Commentaires ({#{{ chapter.comments | length }}#})</h2></strong>
-        {#{% for comment in chapter.comments %}
+        <strong><h2>Commentaires ({{ chapter.comments | length }})</h2></strong>
+        {% for comment in chapter.comments %}
         {{ comment.author}} (<small>{{ comment.createdAt | date('d/m/y à H:i') }}</small>)
         <p>{{ comment.content | raw }}</p>
-        {% endfor %}#}
+        {% endfor %}
     </div>
     <div class="jumbotron">
         <h1>Modifier le chapitre</h1>

@@ -1,8 +1,10 @@
 <?php
 namespace App\Controller;
 
+
 use App\Entity\Comment;
 use App\Form\CommentType;
+use App\Repository\ChapterRepository;
 use App\Repository\CommentRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,22 +16,45 @@ class CommentController extends AbstractController
     /**
      * @var CommentRepository
      */
-    private $repository;
+    private $repositoryComment;
+    private $em;
 
-    public function __construct(CommentRepository $repository, EntityManagerInterface $em)
+    public function __construct(ChapterRepository $repository, CommentRepository $repositoryComment, EntityManagerInterface $em)
     {
-        $this->repository = $repository;
+        $this->repositoryComment = $repositoryComment;
         $this->em = $em;
     }
 
     public function index()
     {
-        $comments = $this->repository->findAll();
+        $comments = $this->repositoryComment->findAll();
 
         return $this->render('chapter/show.html.twig', [
             compact('comments')
         ]);
     }
+
+     /**
+     * @Route("/admin/signaled", name="comment.signal")
+    */ 
+    public function signaled() 
+    {
+        $comments = $this->repositoryComment->findSignaledQuery();
+
+        return $this->render('admin/comment/signaled.html.twig', [
+            'comments' => $comments
+        ]);
+    }
+
+    /**
+     * 
+     */
+    //public function  deleteComment()
+    //{
+       // return $this->render('admin/comment/signaled.html.twig', [
+          //  'comments' => $comments
+        //]);
+    //}
 
     /**
      * @Route("chapter/{id}", name="comment.new")

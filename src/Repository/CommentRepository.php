@@ -3,8 +3,9 @@
 namespace App\Repository;
 
 use App\Entity\Comment;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @method Comment|null find($id, $lockMode = null, $lockVersion = null)
@@ -17,6 +18,19 @@ class CommentRepository extends ServiceEntityRepository
     public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, Comment::class);
+    }
+
+    
+    /**
+     *  @return Comment[] Returns an array of Comment objects
+     * @param $signaled
+     */
+    public function findSignaledQuery(): array
+    {
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.signaled = 1')
+            ->getQuery()
+            ->getResult();
     }
 
     // /**
