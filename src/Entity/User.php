@@ -27,6 +27,11 @@ class User implements UserInterface,\Serializable
      */
     private $password;
 
+    /**
+     * @ORM\Column(type="json")
+     */
+    private $roles;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -72,7 +77,16 @@ class User implements UserInterface,\Serializable
      */
     public function getRoles()
     {
-        return ['ROLE_ADMIN'];
+        $roles = $this->roles;
+        $roles[] = 'ROLE_USER';
+        return \array_unique($roles);
+    }
+
+
+    public function setRoles(array $roles): self
+    {
+        $this->roles = $roles;
+        return $this;
     }
 
     public function getSalt()

@@ -7,11 +7,11 @@
             <h2>La partie administration est l'endroit du site où vous pourrez gérer la publication, la modification ou la suppréssion de vos chapitres. Vous avez aussi la charge de modérer les "commentaires signalés" laissés sur votre site (<a href="http://eduscol.education.fr/internet-responsable/ressources/legamedia/liberte-d-expression-et-ses-limites.html">rappel de la liberté d'expression et de ses limites</a>)</h2>
         </div>
         {% for message in app.flashes('success') %}
-        <div class="container alert alert-success" role="alert">{{ message }}
+            <div class="container alert alert-success" role="alert">{{ message }}
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
-        </div>
+            </div>
         {% endfor %}
         <div class="jumbotron jumbotron-fluid">
             <h1 class="chapitre">Chapitres</h1>

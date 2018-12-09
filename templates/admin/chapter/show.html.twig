@@ -6,12 +6,12 @@
         {{ include('admin/chapter/_form.html.twig') }}  
     </div>
     {% for comment in chapter.comments %}
-            {{ comment.author}} (<small>{{ comment.createdAt | date('d/m/y à H:i') }}</small>)
-            <p>{{ comment.content | raw }}</p>
-            {% if comment.signaled != true %}
-            <p><a href="{{ path ('chapter_show', {'id': comment.id, signal: true}) }}">(signaler)</a></p>
-            {% endif %}
-        {% endfor %}
+        {{ comment.author}} (<small>{{ comment.createdAt | date('d/m/y à H:i') }}</small>)
+        <p>{{ comment.content | raw }}</p>
+        {% if comment.signaled != true %}
+        <p><a href="{{ path ('chapter_show', {'id': comment.id, signal: true}) }}">(signaler)</a></p>
+        {% endif %}
+    {% endfor %}
 {% endblock %}
 
 {% block javascripts %}

@@ -13,13 +13,7 @@
             <p>{{chapter.content | raw }}
         </div>
     </div>
-    {% for message in app.flashes('success') %}
-        <div class="container alert alert-success" role="alert">{{ message }}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    {% endfor %}
+    
     <div class="jumbotron">
         <strong><h2>Commentaires ({{ chapter.comments | length }})</h2></strong>
         {% for comment in chapter.comments %}

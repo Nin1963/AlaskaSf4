@@ -16,11 +16,13 @@ class CommentController extends AbstractController
     /**
      * @var CommentRepository
      */
+    private $repository;
     private $repositoryComment;
     private $em;
 
     public function __construct(ChapterRepository $repository, CommentRepository $repositoryComment, EntityManagerInterface $em)
     {
+        $this->repository = $repository;
         $this->repositoryComment = $repositoryComment;
         $this->em = $em;
     }
@@ -28,9 +30,11 @@ class CommentController extends AbstractController
     public function index()
     {
         $comments = $this->repositoryComment->findAll();
+        $chapters = $this-> repository->findAll();
 
         return $this->render('chapter/show.html.twig', [
-            compact('comments')
+            compact('comments'),
+            'chapters' => $chapters
         ]);
     }
 
@@ -40,40 +44,11 @@ class CommentController extends AbstractController
     public function signaled() 
     {
         $comments = $this->repositoryComment->findSignaledQuery();
+        $chapters = $this-> repository->findAll();
 
         return $this->render('admin/comment/signaled.html.twig', [
-            'comments' => $comments
+            'comments' => $comments,
+            'chapters' => $chapters
         ]);
     }
-
-    /**
-     * 
-     */
-    //public function  deleteComment()
-    //{
-       // return $this->render('admin/comment/signaled.html.twig', [
-          //  'comments' => $comments
-        //]);
-    //}
-
-    /**
-     * @Route("chapter/{id}", name="comment.new")
-     */
-    //public function new(Request $request)
-    //{
-        //$comment = new Comment();
-        //$form = $this->createForm(CommentType::class, $comment);
-        //$form->handleRequest($request);
-
-        //if ($form->isSubmitted() && $form->isValid()) {
-            //$this->em->persist($comment);
-            //$this->em->flush();
-            //return $this->redirectToRoute('chapter.show');
-        //}
-
-        //return $this->render('chapter/show.html.twig', [
-            //'comment' => $comment,
-            //'form' => $form->createView()
-        //]);
-    //}
 }

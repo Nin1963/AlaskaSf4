@@ -45,6 +45,7 @@ class AdminChapterController extends AbstractController
     public function new(Request $request) 
     {
         $chapter = new Chapter();
+        $chapters = $this-> repository->findAll();
         
         $form = $this-> createForm(ChapterType::class, $chapter);
         $form->handleRequest($request);
@@ -58,6 +59,7 @@ class AdminChapterController extends AbstractController
 
         return $this->render    ('admin/chapter/new.html.twig', [
             'chapter' => $chapter,
+            'chapters' => $chapters,
             'form' => $form->createView()
         ]);
     }
@@ -67,6 +69,7 @@ class AdminChapterController extends AbstractController
      */
     public function edit(Chapter $chapter, Request $request)
     {
+        $chapters = $this-> repository->findAll();
         $form = $this-> createForm(ChapterType::class, $chapter);
         $form->handleRequest($request);
 
@@ -78,6 +81,7 @@ class AdminChapterController extends AbstractController
 
         return $this->render('admin/chapter/edit.html.twig', [
             'chapter' => $chapter,
+            'chapters' =>$chapters,
             'form' => $form->createView()
         ]);
     }
@@ -87,6 +91,8 @@ class AdminChapterController extends AbstractController
      */
     public function delete(Chapter $chapter, Request $request)
     {
+        $chapters = $this-> repository->findAll();
+
         if ($this->isCsrfTokenValid('delete' . $chapter->getId(), $request->get('_token'))) {
             $this->em->remove($chapter);
             $this->em->flush();
@@ -101,6 +107,8 @@ class AdminChapterController extends AbstractController
      */
     public function removeComment(Comment $comment, Request $request)
     {
+        $chapters = $this-> repository->findAll();
+
         if ($this->isCsrfTokenValid('delete' . $comment->getId(), $request->get('_token'))) {
             $this->em->remove($comment);
             $this->em->flush();
@@ -110,7 +118,8 @@ class AdminChapterController extends AbstractController
         $comments = $this->repositoryComment->findSignaledQuery();
 
         return $this->render('admin/comment/signaled.html.twig', [
-            'comments' => $comments
+            'comments' => $comments,
+            'chapters' => $chapters
         ]);
     }
 
@@ -119,22 +128,38 @@ class AdminChapterController extends AbstractController
      */
     public function approveComment(Comment $comment, Request $request)
     {
+        $chapters = $this-> repository->findAll();
+        
         if ($this->isCsrfTokenValid('approve' . $comment->getId(), $request->get('_token'))) {
             $signal = $request->query->get('signal');
-            if ($signal == true) {
+            if ($signal == false) {
                 $idComment = $request->query->get('idComment');
+                
                 /*  @var \App\Entity\Comment */
                 $signaledComment = $this->repositoryComment->find($idComment);
+                dump($signaledComment);
                 $signaledComment->setSignaled(false);
+               
                 $this->em->persist($signaledComment);
                 $this->em->flush();
+
+                $this->addFlash('success', 'Le commentaire a bien été approuvé');
             }
-            $this->addFlash('success', 'Le commentaire a bien été approuvé');
         }
         $comments = $this->repositoryComment->findSignaledQuery();
 
         return $this->render('admin/comment/signaled.html.twig', [
-            'comments' => $comments
+            'comments' => $comments,
+            'chapters' => $chapters
         ]);
+    }
+
+     /**
+     * @Route("/logout_message", name="logout_message")
+     */
+    public function logoutMessage()
+    {
+        $this->addFlash('success', 'Vous êtes bien déconnecté(e)');
+        return $this->redirectToRoute('home');
     }
 }

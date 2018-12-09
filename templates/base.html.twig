@@ -33,13 +33,13 @@
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Chapitres</a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                {#{% for chapter in chapters %} 
+                                {% for chapter in chapters %} 
                                 {%  if not app.user %}
                                 <a class="dropdown-item" href="{{ path('chapter.show', {id: chapter.id, slug:chapter.slug}) }}">{{ chapter.title }}</a> 
                                 {% else %}
                                 <a class="dropdown-item" href="{{ path('admin.chapter.edit', {'id': chapter.id}) }}">{{ chapter.title }}</a> 
                                 {% endif %}
-                                {% endfor %}#}
+                                {% endfor %}
                             </div>
                         </li>
                         {% if not app.user %}

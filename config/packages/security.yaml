@@ -14,6 +14,7 @@ security:
             anonymous: true
             logout: 
                 path: /logout
+                target: /logout_message
 
             # activate different ways to authenticate
 
@@ -22,6 +23,7 @@ security:
 
             form_login: 
                 check_path: login
+                default_target_path: admin.chapter.index
             # https://symfony.com/doc/current/security/form_login_setup.html
 
     # Easy way to control access for large sections of your site

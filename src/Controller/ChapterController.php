@@ -36,9 +36,11 @@ class ChapterController extends AbstractController
      */
     public function index(): Response
     {
-        $chapter = $this->repository->findAll();
+        $chapters = $this->repository->findAll();
         
-        return $this->render('chapter/index.html.twig');
+        return $this->render('chapter/index.html.twig', [
+            'chapters' => $chapters
+        ]);
     }
 
     /**
@@ -52,7 +54,7 @@ class ChapterController extends AbstractController
                 'slug' => $chapter->getSlug()
             ], 301);
         }
-
+        $chapters = $this-> repository->findAll();
         $comment = new Comment();
         $form = $this->createForm(CommentType::class, $comment);
 
@@ -61,7 +63,7 @@ class ChapterController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $comment->setChapter($chapter);
             $this->em->persist($comment);
-            $$this->em->flush();
+            $this->em->flush();
 
             $this->addFlash('success', 'Votre commentaire a bien été ajouté.');
 
@@ -77,7 +79,7 @@ class ChapterController extends AbstractController
 
             /*  @var \App\Entity\Comment */
             $signaledComment = $this->repositoryComment->find($idComment);
-
+            dump($signaledComment);
             $signaledComment->setSignaled(true);
             $this->em->flush();
 
@@ -86,6 +88,7 @@ class ChapterController extends AbstractController
 
         return $this->render('chapter/show.html.twig', [
             'chapter' => $chapter, 
+            'chapters' => $chapters,
             'form' => $form->createView(),
         ]);
     }

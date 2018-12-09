@@ -32,16 +32,16 @@
                                 <input type="hidden" name="_method" value="DELETE">
                                 <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ comment.id) }}">
                             </button>
-                        </form>
                         </td>
+                        </form>
                         <form method="post" action="{{ path('admin.comment.approve', {id: comment.id, idComment: comment.signaled, 'signal': false}) }}" onsubmit="return confirm('Êtes-vous vraiment sûr(e)?')">
                         <td>
-                            <button type="submit" class="btn btn-success" >
+                            <button type="submit" class="btn btn-success"><i class="fa fa-thumbs-up"></i>
                                 <input type="hidden" name="_method" value="POST">
-                                <input type="hidden" name="_token" value="{{ csrf_token('approve' ~ comment.id) }}"><i class="fa fa-thumbs-up"></i>
+                                <input type="hidden" name="_token" value="{{ csrf_token('approve' ~ comment.id) }}">
                             </button>
+                        </form>
                         </td>
-                    </form>
                     </tr>
                     {% endfor %}
                 </tbody>
